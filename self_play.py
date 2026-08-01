@@ -1,5 +1,5 @@
 import numpy as np
-import mcts as MCTS
+from mcts import MCTS
 
 
 class SelfPlay:
@@ -26,7 +26,7 @@ class SelfPlay:
 
             step += 1
 
-            prob = mcts.search(state)
+            prob = mcts.search(state, add_noise = True)
 
             train_example.append([state, prob, current_player])
 

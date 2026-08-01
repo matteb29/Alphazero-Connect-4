@@ -29,6 +29,8 @@ class ConnectFourGame:
                 board[r][action] = 1 #1 stands for the current player
 
                 break
+        else:
+            raise ValueError(f"Illegal move: column {action} is full")
 
         #flip the sign of the board to go throught the next player
         return -board
@@ -65,22 +67,22 @@ class ConnectFourGame:
                     return True
 
         #vertical check
-        for c in range(self.cols):
-            for r in range(self.rows - 3):
+        for c in range(self.columns):
+            for r in range(self.raws - 3):
                 if board[r][c] == player and board[r+1][c] == player and \
                    board[r+2][c] == player and board[r+3][c] == player:
                     return True
 
         #positive diagonal
-        for c in range(self.cols - 3):
-            for r in range(self.rows - 3):
+        for c in range(self.columns - 3):
+            for r in range(self.raws - 3):
                 if board[r][c] == player and board[r+1][c+1] == player and \
                    board[r+2][c+2] == player and board[r+3][c+3] == player:
                     return True
 
         #negative diagonal
-        for c in range(self.cols - 3):
-            for r in range(3, self.rows):
+        for c in range(self.columns - 3):
+            for r in range(3, self.raws):
                 if board[r][c] == player and board[r-1][c+1] == player and \
                    board[r-2][c+2] == player and board[r-3][c+3] == player:
                     return True

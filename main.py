@@ -77,11 +77,15 @@ def main():
 
         print(f"Win rate of the new model is {win_rate * 100:.1f}% (threshold is {WIN_THRESHOLD * 100}%)")
 
+        #always keep a checkpoint of the latest trained network
+        torch.save(new_model.state_dict(), "latest_model.pth")
+
         if win_rate > WIN_THRESHOLD:
             print("New model won :) ")
 
             best_model.load_state_dict(new_model.state_dict())
             torch.save(best_model.state_dict(), f"best_model_iteration{iteration}.pth")
+            torch.save(best_model.state_dict(), "best_model.pth")
 
         else:
             print("New model lost :( ")

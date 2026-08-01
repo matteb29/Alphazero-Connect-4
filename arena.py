@@ -22,6 +22,12 @@ class Arena:
 
             action = players[current_player + 1](np.copy(state))
 
+            valid_moves = self.game.get_valid_moves(state)
+            if not valid_moves[action]:
+                raise ValueError(
+                    f"Player {1 if current_player == 1 else 2} chose the illegal column {action}"
+                )
+
             if verbose:
                 print(f"Play {step}: Player {1 if current_player == 1 else 2} plays in column {action}")
 
@@ -65,14 +71,16 @@ class Arena:
 
         print("Now player2 starts")
 
-        for _ in range(num_half):
-                    
+        #after the swap the roles are inverted: a result of +1 means the player
+        #sitting in the first seat won, which is now the original player 2
+        for _ in range(num_games - num_half):
+
             result = self.play_game(verbose)
-        
+
             if result == 1:
-                p1_wins += 1
-            if result == -1:
                 p2_wins += 1
+            if result == -1:
+                p1_wins += 1
             if result == 0:
                 draws += 1
 

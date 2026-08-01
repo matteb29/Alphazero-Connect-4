@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
@@ -17,7 +18,7 @@ class AlphaZeroDataset(Dataset):
         state, prob, reward = self.example[idx]
 
         return(
-            torch.FloatTensor(state),
+            torch.FloatTensor(np.asarray(state, dtype = np.float32)).unsqueeze(0),
             torch.FloatTensor(prob),
             torch.FloatTensor([reward])
         )
@@ -39,7 +40,7 @@ class Trainer:
     def train(self, examples):
 
         dataset = AlphaZeroDataset(examples)
-        dataloader = DataLoader(dataset, batch_size = self.batch_size, shuflle = True) 
+        dataloader = DataLoader(dataset, batch_size = self.batch_size, shuffle = True)
 
         self.model.train()
 
@@ -48,7 +49,7 @@ class Trainer:
         for epoch in range(self.epochs):
 
             total_loss = 0
-            total_prob_value = 0
+            total_pi_loss = 0
             total_v_loss = 0
 
             for batch_states, batch_probs, batch_rewards in dataloader:
@@ -57,7 +58,7 @@ class Trainer:
                 batch_probs = batch_probs.to(self.device)
                 batch_rewards = batch_rewards.to(self.device)
 
-                self.optimezer.zero_grad()
+                self.optimizer.zero_grad()
 
                 out_prob, out_v = self.model(batch_states)
 
